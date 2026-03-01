@@ -1,0 +1,842 @@
+{
+  "T001": {
+    "total_minutes": 211,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 76.7379
+  },
+  "T002": {
+    "total_minutes": 243,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 88.136
+  },
+  "T003": {
+    "total_minutes": 258,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 100.3121
+  },
+  "T004": {
+    "total_minutes": 232,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 82.3827
+  },
+  "T005": {
+    "total_minutes": 247,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 102.8429
+  },
+  "T006": {
+    "total_minutes": 241,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 85.7939
+  },
+  "T007": {
+    "total_minutes": 231,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 81.0188
+  },
+  "T008": {
+    "total_minutes": 252,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 100.3039
+  },
+  "T009": {
+    "total_minutes": 238,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 98.6271
+  },
+  "T010": {
+    "total_minutes": 232,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 77.4241
+  },
+  "T011": {
+    "total_minutes": 220,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 82.6153
+  },
+  "T012": {
+    "total_minutes": 267,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 106.3853
+  },
+  "T013": {
+    "total_minutes": 229,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 92.1389
+  },
+  "T014": {
+    "total_minutes": 285,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 117.5497
+  },
+  "T015": {
+    "total_minutes": 224,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 77.8404
+  },
+  "T016": {
+    "total_minutes": 255,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 106.3938
+  },
+  "T017": {
+    "total_minutes": 221,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 77.7966
+  },
+  "T018": {
+    "total_minutes": 252,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 101.7911
+  },
+  "T019": {
+    "total_minutes": 253,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 99.3025
+  },
+  "T020": {
+    "total_minutes": 222,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 97.1266
+  },
+  "T021": {
+    "total_minutes": 255,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 108.3406
+  },
+  "T022": {
+    "total_minutes": 248,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 99.0401
+  },
+  "T023": {
+    "total_minutes": 217,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 80.3275
+  },
+  "T024": {
+    "total_minutes": 212,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 75.8691
+  },
+  "T025": {
+    "total_minutes": 241,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 89.3271
+  },
+  "T026": {
+    "total_minutes": 217,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 84.8706
+  },
+  "T027": {
+    "total_minutes": 210,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 79.1117
+  },
+  "T028": {
+    "total_minutes": 222,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 85.8841
+  },
+  "T029": {
+    "total_minutes": 268,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 109.9983
+  },
+  "T030": {
+    "total_minutes": 256,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 99.7283
+  },
+  "T031": {
+    "total_minutes": 233,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 87.5513
+  },
+  "T032": {
+    "total_minutes": 260,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 104.017
+  },
+  "T033": {
+    "total_minutes": 236,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 85.8594
+  },
+  "T034": {
+    "total_minutes": 267,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 94.1482
+  },
+  "T035": {
+    "total_minutes": 248,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 106.5637
+  },
+  "T036": {
+    "total_minutes": 273,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 103.2087
+  },
+  "T037": {
+    "total_minutes": 255,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 104.34
+  },
+  "T038": {
+    "total_minutes": 198,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 73.08
+  },
+  "T039": {
+    "total_minutes": 262,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 103.0831
+  },
+  "T040": {
+    "total_minutes": 262,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 93.0378
+  },
+  "T041": {
+    "total_minutes": 259,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 102.1127
+  },
+  "T042": {
+    "total_minutes": 240,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 91.614
+  },
+  "T043": {
+    "total_minutes": 263,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 109.5201
+  },
+  "T044": {
+    "total_minutes": 219,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 80.6701
+  },
+  "T045": {
+    "total_minutes": 280,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 114.5076
+  },
+  "T046": {
+    "total_minutes": 194,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 75.7236
+  },
+  "T047": {
+    "total_minutes": 257,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 100.0004
+  },
+  "T048": {
+    "total_minutes": 237,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 77.9785
+  },
+  "T049": {
+    "total_minutes": 235,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 86.558
+  },
+  "T050": {
+    "total_minutes": 247,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 109.6266
+  },
+  "T051": {
+    "total_minutes": 198,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 76.9932
+  },
+  "T052": {
+    "total_minutes": 268,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 98.8489
+  },
+  "T053": {
+    "total_minutes": 244,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 104.7541
+  },
+  "T054": {
+    "total_minutes": 266,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 111.5276
+  },
+  "T055": {
+    "total_minutes": 218,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 80.6562
+  },
+  "T056": {
+    "total_minutes": 281,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 107.5878
+  },
+  "T057": {
+    "total_minutes": 248,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 90.8691
+  },
+  "T058": {
+    "total_minutes": 229,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 81.411
+  },
+  "T059": {
+    "total_minutes": 248,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 100.372
+  },
+  "T060": {
+    "total_minutes": 242,
+    "phases": [
+      "Preparation",
+      "Granulation",
+      "Drying",
+      "Milling",
+      "Blending",
+      "Compression",
+      "Coating",
+      "Quality_Testing"
+    ],
+    "total_energy_kWh": 80.9192
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "current_target_kg": 50.0,
+  "baseline_kg": 50.0,
+  "regulatory_limit_kg": 50.0,
+  "history": [
+    {
+      "timestamp": "2026-03-01T20:26:13.608492",
+      "old_target": 50.0,
+      "new_target": 50.0,
+      "reason": "Loosened +2%: batch exceeded target in last 5",
+      "last_5_co2e": [
+        66.56,
+        59.71,
+        68.2,
+        77.65,
+        58.67
+      ]
+    },
+    {
+      "timestamp": "2026-03-01T20:26:13.609197",
+      "old_target": 50.0,
+      "new_target": 50.0,
+      "reason": "Loosened +2%: batch exceeded target in last 5",
+      "last_5_co2e": [
+        59.71,
+        68.2,
+        77.65,
+        58.67,
+        58.67
+      ]
+    },
+    {
+      "timestamp": "2026-03-01T20:26:13.610197",
+      "old_target": 50.0,
+      "new_target": 50.0,
+      "reason": "Loosened +2%: batch exceeded target in last 5",
+      "last_5_co2e": [
+        68.2,
+        77.65,
+        58.67,
+        58.67,
+        78.26
+      ]
+    },
+    {
+      "timestamp": "2026-03-01T20:26:13.611700",
+      "old_target": 50.0,
+      "new_target": 50.0,
+      "reason": "Loosened +2%: batch exceeded target in last 5",
+      "last_5_co2e": [
+        77.65,
+        58.67,
+        58.67,
+        78.26,
+        69.49
+      ]
+    },
+    {
+      "timestamp": "2026-03-01T20:26:13.612705",
+      "old_target": 50.0,
+      "new_target": 50.0,
+      "reason": "Loosened +2%: batch exceeded target in last 5",
+      "last_5_co2e": [
+        58.67,
+        58.67,
+        78.26,
+        69.49,
+        56.13
+      ]
+    },
+    {
+      "timestamp": "2026-03-01T20:26:13.613705",
+      "old_target": 50.0,
+      "new_target": 50.0,
+      "reason": "Loosened +2%: batch exceeded target in last 5",
+      "last_5_co2e": [
+        58.67,
+        78.26,
+        69.49,
+        56.13,
+        67.06
+      ]
+    }
+  ]
+}

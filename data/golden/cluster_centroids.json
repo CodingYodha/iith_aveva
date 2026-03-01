@@ -1,0 +1,32 @@
+{
+  "Max Quality Golden": {
+    "Granulation_Time": 10.5392,
+    "Binder_Amount": 6.4841,
+    "Drying_Temp": 67.5097,
+    "Drying_Time": 26.6506,
+    "Compression_Force": 16.8094,
+    "Machine_Speed": 145.6202,
+    "Lubricant_Conc": 1.9611,
+    "Moisture_Content": 1.4051
+  },
+  "Deep Decarbonization Golden": {
+    "Granulation_Time": 14.2758,
+    "Binder_Amount": 8.9596,
+    "Drying_Temp": 65.3138,
+    "Drying_Time": 24.9247,
+    "Compression_Force": 13.5895,
+    "Machine_Speed": 155.3849,
+    "Lubricant_Conc": 1.9583,
+    "Moisture_Content": 1.395
+  },
+  "Balanced Operational Golden": {
+    "Granulation_Time": 18.8055,
+    "Binder_Amount": 9.8707,
+    "Drying_Temp": 63.4548,
+    "Drying_Time": 30.8677,
+    "Compression_Force": 11.9827,
+    "Machine_Speed": 192.7427,
+    "Lubricant_Conc": 2.0332,
+    "Moisture_Content": 1.3678
+  }
+}

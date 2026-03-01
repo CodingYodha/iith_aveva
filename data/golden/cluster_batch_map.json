@@ -1,0 +1,23 @@
+{
+  "Max Quality Golden": [
+    "T035",
+    "T024",
+    "T059",
+    "T013",
+    "T019"
+  ],
+  "Deep Decarbonization Golden": [
+    "T019",
+    "T010",
+    "T050",
+    "T035",
+    "T006"
+  ],
+  "Balanced Operational Golden": [
+    "T012",
+    "T004",
+    "T010",
+    "T052",
+    "T032"
+  ]
+}

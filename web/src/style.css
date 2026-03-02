@@ -831,3 +831,62 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Simulation Page ─────────────────────────────────── */
+.sim-controls {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+  box-shadow: var(--shadow-card);
+}
+
+.sim-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.sim-speed {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sim-speed label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sim-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.sim-progress-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

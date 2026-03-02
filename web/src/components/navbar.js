@@ -10,6 +10,7 @@ const NAV_ITEMS = [
     { path: '/recommendations', label: 'Recommendations' },
     { path: '/signatures', label: 'Golden Signatures' },
     { path: '/carbon', label: 'Carbon Targets' },
+    { path: '/simulation', label: '⚡ Simulation' },
 ];
 
 export function renderNavbar() {

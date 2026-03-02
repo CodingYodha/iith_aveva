@@ -1,12 +1,14 @@
 /**
- * Plotly.js chart helper defaults for the dark theme.
+ * Plotly.js chart helper defaults for the light theme.
  */
 
 export const DARK_LAYOUT = {
-    paper_bgcolor: '#0D1117',
-    plot_bgcolor: '#0D1117',
-    font: { family: 'Inter, sans-serif', color: '#E6EDF3', size: 12 },
+    paper_bgcolor: '#FFFFFF',
+    plot_bgcolor: '#FAFAFA',
+    font: { family: 'Inter, sans-serif', color: '#1A1A2E', size: 12 },
     margin: { l: 60, r: 20, t: 40, b: 50 },
+    xaxis: { gridcolor: '#E5E7EB', zerolinecolor: '#D1D5DB' },
+    yaxis: { gridcolor: '#E5E7EB', zerolinecolor: '#D1D5DB' },
 };
 
 export const DARK_CONFIG = {
@@ -15,12 +17,12 @@ export const DARK_CONFIG = {
 };
 
 export const COLORS = {
-    blue: '#2E86C1',
-    green: '#27AE60',
-    orange: '#E67E22',
-    red: '#E74C3C',
-    amber: '#F39C12',
-    muted: '#8B949E',
+    blue: '#4F46E5',
+    green: '#16A34A',
+    orange: '#EA580C',
+    red: '#DC2626',
+    amber: '#D97706',
+    muted: '#9CA3AF',
 };
 
 export const CLUSTER_COLORS = {

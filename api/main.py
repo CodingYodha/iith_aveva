@@ -36,12 +36,6 @@ app.include_router(carbon.router, prefix="/api/carbon", tags=["carbon"])
 app.include_router(preferences.router, prefix="/api/preferences", tags=["preferences"])
 app.include_router(data.router, prefix="/api/data", tags=["data"])
 
-# Serve web frontend static files (must be after API routes)
-_web_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web", "dist")
-if os.path.isdir(_web_dist):
-    from fastapi.staticfiles import StaticFiles
-    app.mount("/", StaticFiles(directory=_web_dist, html=True), name="web")
-
 
 @app.get("/health")
 def health_check():
@@ -54,6 +48,9 @@ def health_check():
     return {"status": "ok", "db_connected": db_ok, "version": "1.0"}
 
 
-@app.get("/")
-def root():
-    return {"message": "CB-MOPA API running. Visit /docs for Swagger UI."}
+# Serve web frontend static files (must be LAST — after all API routes)
+_web_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web", "dist")
+if os.path.isdir(_web_dist):
+    from fastapi.staticfiles import StaticFiles
+    app.mount("/", StaticFiles(directory=_web_dist, html=True), name="web")
+

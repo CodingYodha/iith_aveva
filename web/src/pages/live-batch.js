@@ -261,7 +261,7 @@ function renderRadar() {
         { type: 'scatterpolar', r: [...goldNorm, goldNorm[0]], theta: [...labels, labels[0]], fill: 'toself', fillcolor: 'rgba(46,134,193,0.2)', line: { color: COLORS.blue, width: 2 }, name: 'Golden Centroid' },
         { type: 'scatterpolar', r: [...currNorm, currNorm[0]], theta: [...labels, labels[0]], fill: 'toself', fillcolor: 'rgba(230,126,34,0.2)', line: { color: COLORS.orange, width: 2 }, name: 'Current Batch' },
     ], {
-        polar: { bgcolor: '#0D1117', radialaxis: { visible: true, range: [0, 1.1], gridcolor: '#30363d' }, angularaxis: { gridcolor: '#30363d' } },
+        polar: { bgcolor: '#FAFAFA', radialaxis: { visible: true, range: [0, 1.1], gridcolor: '#E5E7EB' }, angularaxis: { gridcolor: '#E5E7EB' } },
         height: 400, showlegend: true, legend: { orientation: 'h', y: -0.1 },
     });
 

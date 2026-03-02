@@ -104,7 +104,7 @@ function renderParetoChart(pareto) {
             xaxis: { title: 'Dissolution Rate' },
             yaxis: { title: 'Hardness' },
             zaxis: { title: 'CO₂e (kg)' },
-            bgcolor: '#0D1117',
+            bgcolor: '#FAFAFA',
         },
         height: 550,
         margin: { l: 0, r: 0, t: 30, b: 0 },

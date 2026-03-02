@@ -20,7 +20,7 @@ if _PROJECT_ROOT not in sys.path:
 from constraints import CQA_COLS, PHARMA_LIMITS, CARBON_CONFIG
 from dashboard.utils import api_get, get_cluster_names, CLUSTER_COLORS
 
-st.set_page_config(page_title="CB-MOPA — Carbon Targets", page_icon="🌱", layout="wide")
+st.set_page_config(page_title="CB-MOPA — Carbon Targets", layout="wide")
 
 # ──────────────────────────────────────────────────────────
 # CSS
@@ -60,15 +60,15 @@ except Exception:
     master_df = pd.DataFrame()
 
 # Sidebar
-cluster_name = st.sidebar.selectbox("🏭 Golden Cluster", get_cluster_names(), key="carbon_cluster")
-batch_id = st.sidebar.text_input("📋 Batch ID", value="T001", key="carbon_batch")
-emission_factor = st.sidebar.slider("⚡ Emission Factor (kg CO₂/kWh)", 0.3, 1.2, 0.72, 0.01,
+cluster_name = st.sidebar.selectbox("Golden Cluster", get_cluster_names(), key="carbon_cluster")
+batch_id = st.sidebar.text_input("Batch ID", value="T001", key="carbon_batch")
+emission_factor = st.sidebar.slider("Emission Factor (kg CO₂/kWh)", 0.3, 1.2, 0.72, 0.01,
                                      key="carbon_ef")
 
 # ──────────────────────────────────────────────────────────
 # Header
 # ──────────────────────────────────────────────────────────
-st.title("🌱 Carbon & Sustainability Targets")
+st.title("Carbon & Sustainability Targets")
 st.caption("Real-time CO₂e tracking • Phase attribution • Adaptive target setting")
 st.divider()
 
@@ -117,7 +117,7 @@ kpi1, kpi2, kpi3 = st.columns(3)
 with kpi1:
     delta_batch = current_co2e - prev_co2e
     st.metric(
-        "📦 Current Batch CO₂e",
+        "Current Batch CO₂e",
         f"{current_co2e:.2f} kg",
         delta=f"{delta_batch:+.2f} kg vs prev",
         delta_color="inverse",
@@ -127,7 +127,7 @@ with kpi2:
     delta_roll = rolling_5 - prev_5
     arrow = "📉" if delta_roll < 0 else "📈"
     st.metric(
-        f"📊 5-Batch Rolling Average",
+        f"5-Batch Rolling Average",
         f"{rolling_5:.2f} kg",
         delta=f"{delta_roll:+.2f} kg {arrow}",
         delta_color="inverse",
@@ -136,7 +136,7 @@ with kpi2:
 with kpi3:
     status_color = "normal" if pct_of_target <= 100 else "inverse"
     st.metric(
-        "🎯 % vs Regulatory Target",
+        "% vs Regulatory Target",
         f"{pct_of_target:.1f}%",
         delta=f"Target: {regulatory_limit} kg",
         delta_color="off",
@@ -150,7 +150,7 @@ st.divider()
 gauge_col, trend_col = st.columns([1, 2])
 
 with gauge_col:
-    st.subheader("🔋 CO₂e Gauge")
+    st.subheader("CO₂e Gauge")
 
     fig_gauge = go.Figure(go.Indicator(
         mode="gauge+number+delta",
@@ -180,13 +180,13 @@ with gauge_col:
         margin=dict(l=30, r=30, t=60, b=20),
         font={"color": "#FFFFFF"},
     )
-    st.plotly_chart(fig_gauge, use_container_width=True)
+    st.plotly_chart(fig_gauge, use_container_width=True, key="co2_gauge")
 
 # ──────────────────────────────────────────────────────────
 # Rolling Trend Chart
 # ──────────────────────────────────────────────────────────
 with trend_col:
-    st.subheader("📈 CO₂e Trend — Last 20 Batches")
+    st.subheader("CO₂e Trend — Last 20 Batches")
 
     if recent_values or len(all_co2e) > 0:
         trend_data = recent_values if recent_values else all_co2e[-20:]
@@ -237,7 +237,7 @@ with trend_col:
             yaxis_title="CO₂e (kg)",
             showlegend=False,
         )
-        st.plotly_chart(fig_trend, use_container_width=True)
+        st.plotly_chart(fig_trend, use_container_width=True, key="co2_trend")
     else:
         st.info("No trend data available.")
 
@@ -246,7 +246,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Phase Attribution Donut Chart
 # ──────────────────────────────────────────────────────────
-st.subheader("🔄 Phase CO₂e Attribution")
+st.subheader("Phase CO₂e Attribution")
 
 donut_col, detail_col = st.columns([2, 1])
 
@@ -283,7 +283,7 @@ with donut_col:
                 showlegend=True,
                 legend=dict(orientation="h", y=-0.1, font=dict(size=11)),
             )
-            st.plotly_chart(fig_donut, use_container_width=True)
+            st.plotly_chart(fig_donut, use_container_width=True, key="phase_donut")
         else:
             st.info(f"No trajectory data for batch {batch_id}.")
     except Exception as e:
@@ -316,7 +316,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Dynamic Target Adjustment
 # ──────────────────────────────────────────────────────────
-st.subheader("🎚️ Dynamic Target Adjustment")
+st.subheader("Dynamic Target Adjustment")
 
 adj_col1, adj_col2 = st.columns([2, 1])
 
@@ -348,7 +348,7 @@ with adj_col1:
         yaxis_title="CO₂e (kg)",
         margin=dict(l=50, r=20, t=20, b=40),
     )
-    st.plotly_chart(fig_target, use_container_width=True)
+    st.plotly_chart(fig_target, use_container_width=True, key="target_bar")
 
 with adj_col2:
     st.markdown("**Impact Summary**")
@@ -363,7 +363,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Shift Emission Factors
 # ──────────────────────────────────────────────────────────
-st.subheader("🔌 Shift Emission Factors")
+st.subheader("Shift Emission Factors")
 
 shift_data = {
     "Shift": ["☀️ Morning (6-14)", "🌆 Evening (14-22)", "🌙 Night (22-6)"],
@@ -396,14 +396,14 @@ with shift_col2:
         height=250,
         margin=dict(l=50, r=20, t=40, b=40),
     )
-    st.plotly_chart(fig_shift, use_container_width=True)
+    st.plotly_chart(fig_shift, use_container_width=True, key="shift_bar")
 
 st.divider()
 
 # ──────────────────────────────────────────────────────────
 # Regulatory Compliance Table
 # ──────────────────────────────────────────────────────────
-st.subheader("📋 Regulatory Compliance Status")
+st.subheader("Regulatory Compliance Status")
 
 try:
     batch_row = master_df[master_df["Batch_ID"] == batch_id]

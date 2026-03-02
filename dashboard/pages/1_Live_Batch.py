@@ -20,7 +20,7 @@ if _PROJECT_ROOT not in sys.path:
 
 from constraints import CPP_COLS, PHASE_SENSOR_MAP
 
-st.set_page_config(page_title="CB-MOPA — Live Batch", page_icon="🌊", layout="wide")
+st.set_page_config(page_title="CB-MOPA — Live Batch", layout="wide")
 
 # ──────────────────────────────────────────────────────────
 # Custom CSS
@@ -46,11 +46,11 @@ st.markdown("""
 # ──────────────────────────────────────────────────────────
 from dashboard.utils import get_cluster_names, api_post, CLUSTER_COLORS
 
-cluster_name = st.sidebar.selectbox("🏭 Golden Cluster", get_cluster_names())
+cluster_name = st.sidebar.selectbox("Golden Cluster", get_cluster_names())
 st.session_state["selected_cluster"] = cluster_name
-batch_id_input = st.sidebar.text_input("📋 Batch ID", value="T001")
+batch_id_input = st.sidebar.text_input("Batch ID", value="T001")
 emission_factor = st.sidebar.slider(
-    "⚡ Grid Emission Factor (kg CO₂/kWh)", 0.3, 1.2, 0.72, 0.01
+    "Grid Emission Factor (kg CO₂/kWh)", 0.3, 1.2, 0.72, 0.01
 )
 
 # ──────────────────────────────────────────────────────────
@@ -88,14 +88,14 @@ except Exception as e:
 # ──────────────────────────────────────────────────────────
 # Page Header
 # ──────────────────────────────────────────────────────────
-st.title("🌊 Live Batch vs Golden Envelope")
+st.title("Live Batch vs Golden Envelope")
 st.caption(f"Cluster: **{cluster_name}** | Batch: **{batch_id_input}** | "
            f"Emission Factor: **{emission_factor}** kg CO₂/kWh")
 
 # ──────────────────────────────────────────────────────────
 # CPP Input Panel
 # ──────────────────────────────────────────────────────────
-st.subheader("🔧 Process Parameter Controls")
+st.subheader("Process Parameter Controls")
 
 centroid_cpps = centroids.get(cluster_name, {})
 
@@ -120,7 +120,7 @@ with st.form("cpp_form"):
                 key=f"cpp_{cpp}",
             )
 
-    submitted = st.form_submit_button("🔍 Check Drift", use_container_width=True)
+    submitted = st.form_submit_button("Check Drift", use_container_width=True)
 
 st.divider()
 
@@ -145,7 +145,7 @@ if submitted:
             st.markdown('<div class="alarm-crit"><h3>🚨 OVERALL: CRITICAL — Significant deviation</h3></div>', unsafe_allow_html=True)
 
         # Show details in expander
-        with st.expander("📊 Detailed Drift Results", expanded=False):
+        with st.expander("Detailed Drift Results", expanded=False):
             details = result.get("drift_details", [])
             if details:
                 df_details = pd.DataFrame(details)
@@ -159,7 +159,7 @@ if submitted:
     try:
         from src.signatures.comparator import get_parameter_deviations
         devs = get_parameter_deviations(cpp_values, cluster_name)
-        st.subheader("📐 Parameter Deviations from Golden Centroid")
+        st.subheader("Parameter Deviations from Golden Centroid")
         dev_cols = st.columns(4)
         for i, (cpp, d) in enumerate(devs.items()):
             with dev_cols[i % 4]:
@@ -179,7 +179,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Envelope Visualization
 # ──────────────────────────────────────────────────────────
-st.subheader("📈 Golden Envelope Visualization")
+st.subheader("Golden Envelope Visualization")
 
 env_col1, env_col2 = st.columns([1, 1])
 
@@ -279,7 +279,7 @@ try:
             margin=dict(l=60, r=20, t=50, b=60),
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, key="envelope_chart")
     else:
         st.warning(f"No envelope data for {cluster_name} / {selected_phase} / {selected_sensor}")
 except Exception as e:
@@ -290,7 +290,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Radar Chart: CPP Deviations
 # ──────────────────────────────────────────────────────────
-st.subheader("🕸️ Parameter Deviation Radar")
+st.subheader("Parameter Deviation Radar")
 
 radar_col1, radar_col2 = st.columns([2, 1])
 
@@ -337,7 +337,7 @@ with radar_col1:
             legend=dict(orientation="h", y=-0.1),
             margin=dict(l=60, r=60, t=30, b=60),
         )
-        st.plotly_chart(fig_radar, use_container_width=True)
+        st.plotly_chart(fig_radar, use_container_width=True, key="radar_chart")
     except Exception as e:
         st.error(f"Radar chart error: {e}")
 
@@ -361,7 +361,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Phase Energy Bar Chart
 # ──────────────────────────────────────────────────────────
-st.subheader("⚡ Phase Energy Breakdown")
+st.subheader("Phase Energy Breakdown")
 
 try:
     traj_df = load_batch_trajectory(batch_id_input)
@@ -431,7 +431,7 @@ try:
             margin=dict(l=120, r=20, t=50, b=40),
         )
 
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.plotly_chart(fig_bar, use_container_width=True, key="energy_bar")
 
         # CO2 summary
         total_energy = traj_df["Energy_kWh"].sum()

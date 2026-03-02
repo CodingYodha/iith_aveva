@@ -9,7 +9,7 @@ API_BASE = "http://localhost:8000/api"
 def api_get(endpoint: str) -> dict:
     """GET request to CB-MOPA FastAPI backend."""
     try:
-        r = requests.get(f"{API_BASE}/{endpoint}", timeout=5)
+        r = requests.get(f"{API_BASE}/{endpoint}", timeout=30)
         r.raise_for_status()
         return r.json()
     except Exception as e:
@@ -20,7 +20,7 @@ def api_get(endpoint: str) -> dict:
 def api_post(endpoint: str, data: dict) -> dict:
     """POST request to CB-MOPA FastAPI backend."""
     try:
-        r = requests.post(f"{API_BASE}/{endpoint}", json=data, timeout=10)
+        r = requests.post(f"{API_BASE}/{endpoint}", json=data, timeout=30)
         r.raise_for_status()
         return r.json()
     except Exception as e:

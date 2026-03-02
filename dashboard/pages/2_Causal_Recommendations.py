@@ -20,7 +20,7 @@ if _PROJECT_ROOT not in sys.path:
 from constraints import CPP_COLS, CQA_COLS, PHARMA_LIMITS
 from dashboard.utils import api_get, api_post, get_cluster_names, CLUSTER_COLORS
 
-st.set_page_config(page_title="CB-MOPA — Causal Recommendations", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="CB-MOPA — Causal Recommendations", layout="wide")
 
 # ──────────────────────────────────────────────────────────
 # CSS
@@ -82,14 +82,14 @@ MOCK_PATHWAY_B = {
 # ──────────────────────────────────────────────────────────
 # Sidebar
 # ──────────────────────────────────────────────────────────
-cluster_name = st.sidebar.selectbox("🏭 Golden Cluster", get_cluster_names(),
+cluster_name = st.sidebar.selectbox("Golden Cluster", get_cluster_names(),
                                      key="rec_cluster")
-batch_id = st.sidebar.text_input("📋 Batch ID", value="T001", key="rec_batch")
+batch_id = st.sidebar.text_input("Batch ID", value="T001", key="rec_batch")
 
 # ──────────────────────────────────────────────────────────
 # Header
 # ──────────────────────────────────────────────────────────
-st.title("🧠 Causal Recommendation Engine")
+st.title("Causal Recommendation Engine")
 st.markdown("""
 <div class="docalc-box">
     <strong>Do-Calculus vs Correlation:</strong> Unlike traditional "what correlates" approaches,
@@ -105,7 +105,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Current Batch Summary — CQA Metrics
 # ──────────────────────────────────────────────────────────
-st.subheader(f"📊 Current Batch: {batch_id}")
+st.subheader(f"Current Batch: {batch_id}")
 
 try:
     master_df = pd.read_csv(os.path.join(_PROJECT_ROOT, "data", "processed", "master_dataset.csv"))
@@ -151,7 +151,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Fetch Recommendations
 # ──────────────────────────────────────────────────────────
-st.subheader("🔀 Dual-Pathway Recommendations")
+st.subheader("Dual-Pathway Recommendations")
 
 rec_data = None
 try:
@@ -172,7 +172,7 @@ st.session_state["last_pathway_a"] = pathway_a
 st.session_state["last_pathway_b"] = pathway_b
 
 
-def render_pathway_card(pw, css_class, icon):
+def render_pathway_card(pw, css_class, icon, card_key):
     """Render a recommendation pathway card."""
     name = pw.get("pathway_name", "Unknown")
     changes = pw.get("param_changes", [])
@@ -222,7 +222,7 @@ def render_pathway_card(pw, css_class, icon):
             xaxis_title="Delta",
             font=dict(size=11),
         )
-        st.plotly_chart(fig_impact, use_container_width=True)
+        st.plotly_chart(fig_impact, use_container_width=True, key=f"impact_{card_key}")
 
     # CO2 change and confidence
     m_col1, m_col2, m_col3 = st.columns(3)
@@ -247,28 +247,28 @@ def render_pathway_card(pw, css_class, icon):
 card_col1, card_col2 = st.columns(2)
 
 with card_col1:
-    render_pathway_card(pathway_a, "pathway-a", "🛡️")
+    render_pathway_card(pathway_a, "pathway-a", "", "a")
 
 with card_col2:
-    render_pathway_card(pathway_b, "pathway-b", "🌿")
+    render_pathway_card(pathway_b, "pathway-b", "", "b")
 
 st.divider()
 
 # ──────────────────────────────────────────────────────────
 # Action Buttons
 # ──────────────────────────────────────────────────────────
-st.subheader("🎯 Operator Decision")
+st.subheader("Operator Decision")
 
 btn_col1, btn_col2, btn_col3 = st.columns(3)
 
 with btn_col1:
-    exec_a = st.button("✅ Execute Pathway A (Yield Guard)", use_container_width=True,
+    exec_a = st.button("Execute Pathway A (Yield Guard)", use_container_width=True,
                         type="primary", key="exec_a")
 with btn_col2:
-    exec_b = st.button("✅ Execute Pathway B (Carbon Savior)", use_container_width=True,
+    exec_b = st.button("Execute Pathway B (Carbon Savior)", use_container_width=True,
                         type="primary", key="exec_b")
 with btn_col3:
-    modify = st.button("✏️ Modify & Execute", use_container_width=True, key="modify")
+    modify = st.button("Modify & Execute", use_container_width=True, key="modify")
 
 
 def log_decision(chosen, modified=None, reason=""):
@@ -319,7 +319,7 @@ if modify:
 # Modification Form
 # ──────────────────────────────────────────────────────────
 if st.session_state.get("show_modify_form", False):
-    st.subheader("✏️ Custom Parameter Adjustments")
+    st.subheader("Custom Parameter Adjustments")
 
     with st.form("modify_form"):
         mod_values = {}
@@ -336,7 +336,7 @@ if st.session_state.get("show_modify_form", False):
                 )
 
         mod_reason = st.text_area("Reason for modification", value="", key="mod_reason")
-        confirm_mod = st.form_submit_button("📤 Submit Modified Decision", use_container_width=True)
+        confirm_mod = st.form_submit_button("Submit Modified Decision", use_container_width=True)
 
     if confirm_mod:
         modified_params = {k: v for k, v in mod_values.items() if v != 0.0}
@@ -348,7 +348,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Preference History
 # ──────────────────────────────────────────────────────────
-st.subheader("📈 Operator Preference History")
+st.subheader("Operator Preference History")
 
 try:
     pref_summary = api_get("preferences/summary")
@@ -390,7 +390,7 @@ if pref_summary:
             showlegend=False,
             margin=dict(l=50, r=20, t=50, b=40),
         )
-        st.plotly_chart(fig_pref, use_container_width=True)
+        st.plotly_chart(fig_pref, use_container_width=True, key="pref_dist")
 
     with pref_col2:
         model_status = pref_summary.get("status", "cold_start")
@@ -409,7 +409,7 @@ if pref_summary:
     try:
         history = api_get("decisions/history?limit=10")
         if history and isinstance(history, list) and len(history) > 0:
-            with st.expander("📋 Recent Decision Log", expanded=False):
+            with st.expander("Recent Decision Log", expanded=False):
                 hist_display = []
                 for h in history:
                     hist_display.append({

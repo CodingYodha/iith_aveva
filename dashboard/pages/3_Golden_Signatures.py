@@ -19,7 +19,7 @@ if _PROJECT_ROOT not in sys.path:
 from constraints import CPP_COLS, CQA_COLS, GOLDEN_CLUSTER_NAMES
 from dashboard.utils import api_get, get_cluster_names, CLUSTER_COLORS
 
-st.set_page_config(page_title="CB-MOPA — Golden Signatures", page_icon="🏆", layout="wide")
+st.set_page_config(page_title="CB-MOPA — Golden Signatures", layout="wide")
 
 # ──────────────────────────────────────────────────────────
 # CSS
@@ -71,14 +71,14 @@ def load_master():
 # ──────────────────────────────────────────────────────────
 # Header
 # ──────────────────────────────────────────────────────────
-st.title("🏆 Golden Signature Explorer")
+st.title("Golden Signature Explorer")
 st.caption("Pareto-optimal trade-off space • 3 golden clusters • Continuous learning")
 st.divider()
 
 # ──────────────────────────────────────────────────────────
 # 3D Pareto Front
 # ──────────────────────────────────────────────────────────
-st.subheader("🎯 Multi-Objective Pareto Front — Trade-off Space")
+st.subheader("Multi-Objective Pareto Front — Trade-off Space")
 
 try:
     pareto_df = load_pareto_front()
@@ -135,7 +135,7 @@ try:
                 font=dict(size=12),
             ),
         )
-        st.plotly_chart(fig_3d, use_container_width=True)
+        st.plotly_chart(fig_3d, use_container_width=True, key="pareto_3d")
     else:
         st.info("No Pareto front data found. Run `python -m src.optimization.pareto` first.")
 except Exception as e:
@@ -146,7 +146,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # 3 Golden Cluster Cards
 # ──────────────────────────────────────────────────────────
-st.subheader("🔑 Golden Cluster Profiles")
+st.subheader("Golden Cluster Profiles")
 
 try:
     centroids = load_centroids()
@@ -185,7 +185,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Signature Version History
 # ──────────────────────────────────────────────────────────
-st.subheader("📜 Signature Version History")
+st.subheader("Signature Version History")
 
 selected_for_history = st.selectbox("View Signature History", get_cluster_names(),
                                      key="hist_cluster")
@@ -214,7 +214,7 @@ try:
             """, unsafe_allow_html=True)
 
         # Self-update log
-        with st.expander("📊 Signature Update Log"):
+        with st.expander("Signature Update Log"):
             update_entries = [e for e in history if e.get("source") == "updated"]
             if update_entries:
                 log_data = []
@@ -239,7 +239,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Simulate New Batch
 # ──────────────────────────────────────────────────────────
-st.subheader("🧪 Simulate New Batch — Would It Update the Signature?")
+st.subheader("Simulate New Batch — Would It Update the Signature?")
 
 with st.expander("Open Simulation Panel", expanded=False):
     try:
@@ -340,7 +340,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # Export
 # ──────────────────────────────────────────────────────────
-st.subheader("📤 Export Golden Signatures")
+st.subheader("Export Golden Signatures")
 
 try:
     centroids = load_centroids()

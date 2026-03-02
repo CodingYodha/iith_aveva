@@ -1,6 +1,6 @@
 """
 CB-MOPA Dashboard — Main Entry Point & Home Page.
-⚗️ Causal-Bayesian Multi-Objective Process Analytics
+Causal-Bayesian Multi-Objective Process Analytics
 """
 
 import sys
@@ -74,7 +74,7 @@ st.markdown("""
 # ──────────────────────────────────────────────────────────
 # Header
 # ──────────────────────────────────────────────────────────
-st.markdown('<div class="hero-title">⚗️ CB-MOPA: Causal-Bayesian Multi-Objective Process Analytics</div>', unsafe_allow_html=True)
+st.markdown('<div class="hero-title">CB-MOPA: Causal-Bayesian Multi-Objective Process Analytics</div>', unsafe_allow_html=True)
 st.markdown('<div class="hero-subtitle">Track B Optimization Engine — Pharmaceutical Tablet Manufacturing</div>', unsafe_allow_html=True)
 
 st.divider()
@@ -87,7 +87,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("""
     <div class="module-card">
-        <h3>🌊 Module 1: Probabilistic DTW Envelope</h3>
+        <h3>Module 1: Probabilistic DTW Envelope</h3>
         <p>Real-time temporal drift detection against golden batch signatures.
         Dynamic Time Warping Barycenter Averaging builds ±3σ probabilistic
         corridors for each phase × sensor combination. Soft-DTW distance
@@ -98,7 +98,7 @@ with col1:
 with col2:
     st.markdown("""
     <div class="module-card">
-        <h3>🧠 Module 2: Causal Counterfactual Engine</h3>
+        <h3>Module 2: Causal Counterfactual Engine</h3>
         <p>DoWhy Do-calculus interventions that prove causal safety before
         acting. Structural Causal Models fitted on the manufacturing DAG
         estimate treatment effects and generate dual-pathway recommendations
@@ -109,7 +109,7 @@ with col2:
 with col3:
     st.markdown("""
     <div class="module-card">
-        <h3>🎯 Module 3: Bayesian HITL Preference</h3>
+        <h3>Module 3: Bayesian HITL Preference</h3>
         <p>BoTorch PairwiseGP learns the operator's latent utility function
         from pairwise A/B choices. Recommendations are re-ranked by learned
         preference, adapting to each shift supervisor's operational style
@@ -122,7 +122,7 @@ st.divider()
 # ──────────────────────────────────────────────────────────
 # System Status
 # ──────────────────────────────────────────────────────────
-st.subheader("🔧 System Status")
+st.subheader("System Status")
 
 status_col1, status_col2, status_col3, status_col4 = st.columns(4)
 
@@ -155,54 +155,7 @@ with status_col4:
 st.divider()
 
 # ──────────────────────────────────────────────────────────
-# Architecture Flow
-# ──────────────────────────────────────────────────────────
-st.subheader("🏗️ System Architecture")
-
-st.markdown("""
-<div class="arch-box">
-<pre>
- ┌─────────────────────────────────────────────────────────────────────────────────┐
- │                        CB-MOPA PIPELINE ARCHITECTURE                           │
- ├─────────────────────────────────────────────────────────────────────────────────┤
- │                                                                                 │
- │   📊 DATA LAYER                                                                │
- │   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                     │
- │   │  Production   │    │   Process    │    │   Feature    │                     │
- │   │   60×15 CSV   │───▶│  60 Batches  │───▶│  Engineer    │                     │
- │   │  (CPP + CQA)  │    │ (Trajectory) │    │  (67 cols)   │                     │
- │   └──────────────┘    └──────────────┘    └──────┬───────┘                     │
- │                                                   │                             │
- │   🔬 OPTIMIZATION LAYER                          ▼                             │
- │   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                     │
- │   │  NSGA-II     │    │  K-Means     │    │   DTW        │                     │
- │   │  Pareto      │───▶│  3 Golden    │───▶│  Envelopes   │                     │
- │   │  (100 sols)  │    │  Clusters    │    │  (±3σ bands) │                     │
- │   └──────────────┘    └──────────────┘    └──────────────┘                     │
- │                                                                                 │
- │   🧠 CAUSAL LAYER                          🎯 HITL LAYER                      │
- │   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                     │
- │   │  DoWhy DAG   │    │  Counterfact │    │  BoTorch     │                     │
- │   │  (15 nodes,  │───▶│  Intervent.  │───▶│  PairwiseGP  │                     │
- │   │   20 edges)  │    │  (Do-calc)   │    │  (Utility)   │                     │
- │   └──────────────┘    └──────────────┘    └──────┬───────┘                     │
- │                                                   │                             │
- │   🌐 API + DASHBOARD                             ▼                             │
- │   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                     │
- │   │  FastAPI     │    │  Streamlit   │    │  Carbon      │                     │
- │   │  (11 endpts) │◀──▶│  Dashboard   │    │  Tracker     │                     │
- │   │  Port 8000   │    │  Port 8501   │    │  (Dynamic)   │                     │
- │   └──────────────┘    └──────────────┘    └──────────────┘                     │
- │                                                                                 │
- └─────────────────────────────────────────────────────────────────────────────────┘
-</pre>
-</div>
-""", unsafe_allow_html=True)
-
-st.divider()
-
-# ──────────────────────────────────────────────────────────
 # Navigation
 # ──────────────────────────────────────────────────────────
-st.info("👈 **Use the sidebar** to navigate between dashboard pages: "
-        "DTW Golden Envelope, Causal What-If, Pareto Explorer, and Carbon Monitor.")
+st.info("Use the sidebar to navigate between dashboard pages: "
+        "Live Batch Envelope, Causal Recommendations, Golden Signatures, and Carbon Targets.")

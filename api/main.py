@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from api.routers import batch, recommendations, decisions, signatures, carbon, preferences
+from api.routers import batch, recommendations, decisions, signatures, carbon, preferences, data
 
 app.include_router(batch.router, prefix="/api/batch", tags=["batch"])
 app.include_router(recommendations.router, prefix="/api/recommendations", tags=["recommendations"])
@@ -34,6 +34,13 @@ app.include_router(decisions.router, prefix="/api/decisions", tags=["decisions"]
 app.include_router(signatures.router, prefix="/api/signatures", tags=["signatures"])
 app.include_router(carbon.router, prefix="/api/carbon", tags=["carbon"])
 app.include_router(preferences.router, prefix="/api/preferences", tags=["preferences"])
+app.include_router(data.router, prefix="/api/data", tags=["data"])
+
+# Serve web frontend static files (must be after API routes)
+_web_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web", "dist")
+if os.path.isdir(_web_dist):
+    from fastapi.staticfiles import StaticFiles
+    app.mount("/", StaticFiles(directory=_web_dist, html=True), name="web")
 
 
 @app.get("/health")

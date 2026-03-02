@@ -25,6 +25,31 @@ export function hideSidebar() {
     el.classList.add('hidden');
 }
 
+function showLoading() {
+    let overlay = document.getElementById('loading-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'loading-overlay';
+        overlay.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1rem">
+        <div class="spinner" style="width:48px;height:48px;border-width:4px"></div>
+        <div style="color:var(--text-secondary);font-weight:600">Updating analytics...</div>
+      </div>
+    `;
+        overlay.style.cssText = `
+      position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(4px);
+      display:flex;align-items:center;justify-content:center;
+    `;
+        document.body.appendChild(overlay);
+    }
+}
+
+function hideLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.remove();
+}
+
 export function renderSidebar(opts = {}) {
     showSidebar();
     const el = document.getElementById('sidebar');
@@ -47,16 +72,16 @@ export function renderSidebar(opts = {}) {
              min="0.3" max="1.2" step="0.01" value="${state.emissionFactor}" />
       <div class="sidebar-range-value" id="sb-ef-val">${state.emissionFactor.toFixed(2)}</div>
     ` : ''}
+
+    <button class="btn btn-primary btn-full" id="sb-apply" style="margin-top:1.2rem">Apply Changes</button>
   `;
 
-    // Bind events
+    // Update local state on input (no page refresh yet)
     el.querySelector('#sb-cluster').addEventListener('change', e => {
         state.cluster = e.target.value;
-        if (opts.onChange) opts.onChange();
     });
-    el.querySelector('#sb-batch').addEventListener('change', e => {
+    el.querySelector('#sb-batch').addEventListener('input', e => {
         state.batchId = e.target.value.trim() || 'T001';
-        if (opts.onChange) opts.onChange();
     });
     if (showEF) {
         const efInput = el.querySelector('#sb-ef');
@@ -65,8 +90,19 @@ export function renderSidebar(opts = {}) {
             state.emissionFactor = parseFloat(e.target.value);
             efVal.textContent = state.emissionFactor.toFixed(2);
         });
-        efInput.addEventListener('change', () => {
-            if (opts.onChange) opts.onChange();
-        });
     }
+
+    // Apply button triggers page refresh with loading overlay
+    el.querySelector('#sb-apply').addEventListener('click', async () => {
+        if (opts.onChange) {
+            showLoading();
+            // Small delay so spinner renders before heavy work
+            await new Promise(r => setTimeout(r, 50));
+            try {
+                await opts.onChange();
+            } finally {
+                hideLoading();
+            }
+        }
+    });
 }

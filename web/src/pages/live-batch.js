@@ -11,7 +11,7 @@ let cachedEnvelopes = null;
 let cachedConstraints = null;
 
 export async function renderLiveBatch(main) {
-    renderSidebar({ showEmissionFactor: true });
+    renderSidebar({ showEmissionFactor: true, onChange: () => renderLiveBatch(main) });
 
     main.innerHTML = `
     <div class="page-header">
@@ -258,8 +258,8 @@ function renderRadar() {
     const goldNorm = goldVals.map(v => v / maxV);
 
     plotChart('radar-chart', [
-        { type: 'scatterpolar', r: [...goldNorm, goldNorm[0]], theta: [...labels, labels[0]], fill: 'toself', fillcolor: 'rgba(46,134,193,0.2)', line: { color: COLORS.blue, width: 2 }, name: 'Golden Centroid' },
-        { type: 'scatterpolar', r: [...currNorm, currNorm[0]], theta: [...labels, labels[0]], fill: 'toself', fillcolor: 'rgba(230,126,34,0.2)', line: { color: COLORS.orange, width: 2 }, name: 'Current Batch' },
+        { type: 'scatterpolar', r: [...goldNorm, goldNorm[0]], theta: [...labels, labels[0]], fill: 'toself', fillcolor: 'rgba(79,70,229,0.25)', line: { color: COLORS.blue, width: 3 }, marker: { size: 7, color: COLORS.blue }, name: 'Golden Centroid' },
+        { type: 'scatterpolar', r: [...currNorm, currNorm[0]], theta: [...labels, labels[0]], fill: 'toself', fillcolor: 'rgba(234,88,12,0.25)', line: { color: COLORS.orange, width: 3 }, marker: { size: 7, color: COLORS.orange }, name: 'Current Batch' },
     ], {
         polar: { bgcolor: '#FAFAFA', radialaxis: { visible: true, range: [0, 1.1], gridcolor: '#E5E7EB' }, angularaxis: { gridcolor: '#E5E7EB' } },
         height: 400, showlegend: true, legend: { orientation: 'h', y: -0.1 },

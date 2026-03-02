@@ -8,7 +8,7 @@ import { plotChart, COLORS, CLUSTER_COLORS } from '../components/charts.js';
 const CLUSTERS = ['Max Quality Golden', 'Deep Decarbonization Golden', 'Balanced Operational Golden'];
 
 export async function renderSignatures(main) {
-    renderSidebar({ showEmissionFactor: false });
+    renderSidebar({ showEmissionFactor: false, onChange: () => renderSignatures(main) });
 
     main.innerHTML = `
     <div class="page-header">
@@ -176,8 +176,10 @@ async function loadHistory(clusterName) {
 async function buildSimSliders(centroids, constraints) {
     const container = document.getElementById('sim-sliders');
     const cppCols = constraints.CPP_COLS || [];
-    let stats;
-    try { stats = await api.masterStats(); } catch { return; }
+    let stats, pareto;
+    try {
+        [stats, pareto] = await Promise.all([api.masterStats(), api.pareto()]);
+    } catch { return; }
 
     const centroid = centroids[state.cluster] || {};
     container.innerHTML = cppCols.map(cpp => {
@@ -201,8 +203,127 @@ async function buildSimSliders(centroids, constraints) {
     });
 
     document.getElementById('btn-sim').addEventListener('click', () => {
-        document.getElementById('sim-result').innerHTML = '<div class="alert alert-info">Dominance check requires the backend signature-manager endpoint. Use the API directly for full simulation.</div>';
+        runDominanceCheck(cppCols, centroids, pareto, constraints, stats);
     });
+}
+
+function runDominanceCheck(cppCols, centroids, pareto, constraints, stats) {
+    const resultEl = document.getElementById('sim-result');
+
+    // Get simulated CPP values
+    const simCPP = {};
+    cppCols.forEach(cpp => {
+        const el = document.getElementById(`sim-${cpp}`);
+        simCPP[cpp] = el ? parseFloat(el.value) : 0;
+    });
+
+    // Find nearest cluster by CPP distance
+    let nearestCluster = state.cluster;
+    let minDist = Infinity;
+    for (const [cname, cvals] of Object.entries(centroids)) {
+        let dist = 0;
+        cppCols.forEach(cpp => {
+            const r = stats.cpp_ranges?.[cpp] || { min: 0, max: 1 };
+            const range = Math.max(r.max - r.min, 0.01);
+            dist += Math.pow((simCPP[cpp] - (cvals[cpp] || 0)) / range, 2);
+        });
+        if (dist < minDist) { minDist = dist; nearestCluster = cname; }
+    }
+
+    // Estimate CQA outcomes using nearest Pareto batches
+    const clusterBatches = pareto.filter(b => b.cluster_name === nearestCluster);
+    const cqaCols = ['Hardness', 'Dissolution_Rate', 'Friability', 'Content_Uniformity', 'Disintegration_Time'];
+    const limits = constraints.PHARMA_LIMITS || {};
+
+    // Estimate quality as weighted avg of k-nearest Pareto batches
+    const k = Math.min(5, clusterBatches.length || 1);
+    const sortedByDist = clusterBatches.map(b => {
+        let d = 0;
+        cppCols.forEach(cpp => {
+            const r = stats.cpp_ranges?.[cpp] || { min: 0, max: 1 };
+            const range = Math.max(r.max - r.min, 0.01);
+            d += Math.pow(((simCPP[cpp] || 0) - (b[cpp] || 0)) / range, 2);
+        });
+        return { ...b, dist: Math.sqrt(d) };
+    }).sort((a, b) => a.dist - b.dist).slice(0, k);
+
+    const estimated = {};
+    cqaCols.forEach(cqa => {
+        const totalW = sortedByDist.reduce((s, b) => s + 1 / (b.dist + 0.001), 0);
+        estimated[cqa] = sortedByDist.reduce((s, b) => s + (b[cqa] || 0) / (b.dist + 0.001), 0) / totalW;
+    });
+
+    // Estimate CO2e from CPP deviation
+    const centroidCO2 = clusterBatches.length ? clusterBatches.reduce((s, b) => s + (b.total_CO2e_kg || 0), 0) / clusterBatches.length : 65;
+    const deviation = Math.sqrt(minDist) * 5;
+    estimated.total_CO2e_kg = centroidCO2 * (1 + deviation * 0.05);
+
+    // Check pharma compliance
+    const compliance = {};
+    let allPass = true;
+    cqaCols.forEach(cqa => {
+        const v = estimated[cqa];
+        const lim = limits[cqa] || {};
+        let pass = true;
+        if (lim.min !== undefined && v < lim.min) pass = false;
+        if (lim.max !== undefined && v > lim.max) pass = false;
+        compliance[cqa] = pass;
+        if (!pass) allPass = false;
+    });
+
+    // Pareto dominance: is this batch dominated by any existing batch?
+    // A dominates B if A is better on all objectives
+    let dominated = false;
+    let dominatedBy = 0;
+    for (const b of pareto) {
+        const betterOnAll =
+            (b.Hardness || 0) >= (estimated.Hardness || 0) &&
+            (b.Dissolution_Rate || 0) >= (estimated.Dissolution_Rate || 0) &&
+            (b.total_CO2e_kg || 999) <= (estimated.total_CO2e_kg || 999);
+        const strictlyBetter =
+            (b.Hardness || 0) > (estimated.Hardness || 0) ||
+            (b.Dissolution_Rate || 0) > (estimated.Dissolution_Rate || 0) ||
+            (b.total_CO2e_kg || 999) < (estimated.total_CO2e_kg || 999);
+        if (betterOnAll && strictlyBetter) { dominated = true; dominatedBy++; }
+    }
+
+    // Render results
+    const cqaRows = cqaCols.map(cqa =>
+        `<tr>
+          <td>${cqa.replace(/_/g, ' ')}</td>
+          <td>${estimated[cqa].toFixed(2)}</td>
+          <td><span class="badge ${compliance[cqa] ? 'badge-pass' : 'badge-fail'}">${compliance[cqa] ? 'PASS' : 'FAIL'}</span></td>
+        </tr>`
+    ).join('');
+
+    resultEl.innerHTML = `
+      <div class="alert ${dominated ? 'alert-warn' : 'alert-ok'}">
+        ${dominated
+            ? `DOMINATED — This configuration is dominated by ${dominatedBy} existing Pareto batch(es). Consider adjusting parameters.`
+            : 'NON-DOMINATED — This configuration could extend the Pareto front!'}
+      </div>
+
+      <div class="grid-3" style="margin:1rem 0">
+        <div class="metric-card">
+          <div class="metric-value" style="color:var(--accent-blue)">${nearestCluster.split(' ')[0]}</div>
+          <p class="metric-label">Nearest Cluster</p>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" style="color:${allPass ? 'var(--accent-green)' : 'var(--accent-red)'}">${allPass ? 'PASS' : 'FAIL'}</div>
+          <p class="metric-label">Pharma Compliance</p>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">${estimated.total_CO2e_kg.toFixed(1)} kg</div>
+          <p class="metric-label">Estimated CO₂e</p>
+        </div>
+      </div>
+
+      <h3 style="margin-bottom:0.5rem">Estimated CQA Outcomes</h3>
+      <table class="data-table">
+        <thead><tr><th>Attribute</th><th>Estimated Value</th><th>Compliant</th></tr></thead>
+        <tbody>${cqaRows}</tbody>
+      </table>
+    `;
 }
 
 async function exportSignatures(centroids) {

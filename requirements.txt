@@ -25,7 +25,7 @@ httpx==0.25.2
 starlette==0.27.0
 
 # Data Apps
-streamlit==1.28.2
+streamlit==1.35.0
 plotly==5.17.0
 
 # DB
@@ -35,5 +35,5 @@ pydantic==2.4.2
 # Utilities
 openpyxl==3.1.2
 pytest==7.4.3
-packaging>=24.2
+packaging>=20.0,<24
 h11==0.14.0

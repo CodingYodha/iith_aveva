@@ -19,7 +19,7 @@ if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
 from constraints import CPP_COLS
-from src.causal.dag_definition import build_dag, get_dag_gml_string
+from src.causal.dag_definition import build_dag, get_dag_gml_string, get_active_dag
 
 # Outcome variables to model
 OUTCOME_VARS = [
@@ -67,7 +67,7 @@ def build_and_fit_causal_model(
             treatment_cols.append("total_energy_kWh")
 
     if not treatment_cols:
-        print(f"  ⚠ No treatment variables found for {outcome_var}")
+        print(f"  No treatment variables found for {outcome_var}")
         return {
             "model": None,
             "estimand": None,
@@ -120,7 +120,7 @@ def fit_all_causal_models(
         {outcome_var: model_dict}
     """
     df = pd.read_csv(os.path.join(_PROJECT_ROOT, master_dataset_path))
-    dag = build_dag()
+    dag, source = get_active_dag()
 
     models_dir = os.path.join(_PROJECT_ROOT, "models")
     os.makedirs(models_dir, exist_ok=True)

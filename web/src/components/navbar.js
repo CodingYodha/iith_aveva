@@ -12,7 +12,8 @@ const NAV_ITEMS = [
     { path: '/recommendations', label: 'Recommendations' },
     { path: '/signatures', label: 'Golden Signatures' },
     { path: '/carbon', label: 'Carbon Targets' },
-    { path: '/simulation', label: '⚡ Simulation' },
+    { path: '/simulation', label: 'Simulation' },
+    { path: '/dag-editor', label: 'DAG Editor' },
     { path: '/history', label: 'History' },
 ];
 
@@ -32,7 +33,10 @@ export function renderNavbar() {
             : `<a href="#/login" class="btn btn-primary btn-sm">Login</a>`;
 
         nav.innerHTML = `
-        <div class="nav-brand">CB-MOPA</div>
+        <a href="#/" class="nav-brand">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-blue);"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          CB-MOPA
+        </a>
         <div class="nav-links">${links}</div>
         <div class="nav-right">
           <div class="nav-status" id="nav-health">

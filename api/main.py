@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from api.routers import batch, recommendations, decisions, signatures, carbon, preferences, data
+from api.routers import batch, recommendations, decisions, signatures, carbon, preferences, data, dag
 
 app.include_router(batch.router, prefix="/api/batch", tags=["batch"])
 app.include_router(recommendations.router, prefix="/api/recommendations", tags=["recommendations"])
@@ -35,6 +35,7 @@ app.include_router(signatures.router, prefix="/api/signatures", tags=["signature
 app.include_router(carbon.router, prefix="/api/carbon", tags=["carbon"])
 app.include_router(preferences.router, prefix="/api/preferences", tags=["preferences"])
 app.include_router(data.router, prefix="/api/data", tags=["data"])
+app.include_router(dag.router, prefix="/api/dag", tags=["dag"])
 
 
 @app.get("/health")

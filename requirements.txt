@@ -1,39 +1,40 @@
 # Core Scientific Stack
-numpy==1.24.4
-scipy==1.11.4
-pandas==2.1.4
-scikit-learn==1.3.2
-matplotlib==3.8.2
-joblib==1.3.2
+numpy
+scipy
+pandas
+scikit-learn
+matplotlib
+joblib
 
 # ML / Optimization
-xgboost==2.0.0
-pymoo==0.6.0
-tslearn==0.6.2
-dowhy==0.11.1
-networkx==3.1
+xgboost
+pymoo
+tslearn
+dowhy
+networkx
 
 # PyTorch Ecosystem
-torch==2.1.0
-gpytorch==1.11
-botorch==0.9.4
+torch
+gpytorch
+botorch
 
 # Web / API
-fastapi==0.104.1
-uvicorn==0.24.0
-httpx==0.25.2
-starlette==0.27.0
+fastapi
+uvicorn
+httpx
+starlette
+requests
 
 # Data Apps
-streamlit==1.28.2
-plotly==5.17.0
+streamlit
+plotly
 
 # DB
-sqlalchemy==2.0.23
-pydantic==2.4.2
+sqlalchemy
+pydantic
 
 # Utilities
-openpyxl==3.1.2
-pytest==7.4.3
+openpyxl
+pytest
 packaging>=24.2
-h11==0.14.0
+h11

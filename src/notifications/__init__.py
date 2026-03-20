@@ -1,0 +1,1 @@
+# Initialization inside src/notifications

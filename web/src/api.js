@@ -36,6 +36,7 @@ export const api = {
 
     // Batch
     driftCheck: (data) => request('POST', 'batch/drift-check', data),
+    advanceSimulation: () => request('POST', 'batch/advance-simulation'),
 
     // Recommendations
     recommendations: (batchId, cluster) => request('GET', `recommendations/${batchId}/${cluster}`),

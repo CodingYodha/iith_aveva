@@ -47,6 +47,10 @@ def log_operator_decision(input_data: OperatorDecisionInput):
                 preference_model.fit()
                 preference_model.save_state()
 
+        # Unpause simulation since operator made a decision
+        import api.routers.batch as batch_router
+        batch_router.SIMULATION_STATE["paused_for_hitl"] = False
+
         return {
             "decision_id": decision_id,
             "chosen": input_data.chosen,

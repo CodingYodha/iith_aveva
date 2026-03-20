@@ -7,6 +7,8 @@
 import { api } from '../api.js';
 import { hideSidebar } from '../components/sidebar.js';
 import { plotChart, COLORS, DARK_LAYOUT } from '../components/charts.js';
+import { trackAction } from '../lib/tracker.js';
+import { getCurrentUser } from '../lib/auth.js';
 
 let simState = null;  // simulation state
 
@@ -23,13 +25,23 @@ export async function renderSimulation(main) {
       <div class="sim-controls-row">
         <div class="sim-speed">
           <label for="sim-speed">Batch Interval</label>
-          <input type="range" id="sim-speed" min="1" max="10" step="1" value="3" style="accent-color:var(--accent-blue);width:180px" />
+          <input type="range" id="sim-speed" min="1" max="10" step="1" value="3" style="accent-color:var(--accent-blue);width:160px" />
           <span id="sim-speed-val" style="font-weight:700;color:var(--accent-blue)">3s</span>
         </div>
+        <div class="sim-toggles" style="display:flex; flex-direction:column; gap:0.5rem; justify-content:center; font-size: 0.85rem;">
+          <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;" title="Automatically select the best GP Utility pathway without pausing.">
+            <input type="checkbox" id="sim-auto-botorch" style="accent-color:var(--accent-blue); cursor:pointer;" /> 
+            Auto-BoTorch Decisions
+          </label>
+          <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;" title="Send an email summary after every single batch completes.">
+            <input type="checkbox" id="sim-email-batch" style="accent-color:var(--accent-blue); cursor:pointer;" /> 
+            Batchwise Status Emails
+          </label>
+        </div>
         <div class="sim-buttons">
-          <button class="btn btn-primary" id="btn-play">▶ Start</button>
-          <button class="btn btn-outline" id="btn-pause" disabled>⏸ Pause</button>
-          <button class="btn btn-outline" id="btn-reset">↺ Reset</button>
+          <button class="btn btn-primary" id="btn-play">Start</button>
+          <button class="btn btn-outline" id="btn-pause" disabled>Pause</button>
+          <button class="btn btn-outline" id="btn-reset">Reset</button>
         </div>
         <div class="sim-progress-info">
           <span id="sim-batch-counter" style="font-weight:700;font-size:1.1rem">0 / 0</span>
@@ -51,8 +63,13 @@ export async function renderSimulation(main) {
           <div class="metric-card"><div class="metric-value" id="m-co2e">—</div><p class="metric-label">CO₂e (kg)</p></div>
         </div>
 
+        <div id="sim-hitl-container" style="display:none; margin-bottom:1.5rem; padding:1.5rem; border:2px dashed var(--accent-orange); border-radius:8px; background:var(--bg-secondary);"></div>
+
         <h2 class="section-title">CO₂e Trend (Live)</h2>
         <div id="sim-trend" class="chart-container" style="height:280px"></div>
+
+        <h2 class="section-title" style="margin-top:1.5rem">Phase Energy Breakdown</h2>
+        <div id="sim-energy-chart" class="chart-container" style="height:240px"></div>
 
         <h2 class="section-title" style="margin-top:1.5rem">Drift Score History</h2>
         <div id="sim-drift-chart" class="chart-container" style="height:240px"></div>
@@ -131,6 +148,7 @@ function startSim() {
     document.getElementById('btn-play').disabled = true;
     document.getElementById('btn-pause').disabled = false;
     addLogEntry('system', 'Simulation started', `Speed: ${simState.speed / 1000}s per batch`);
+    trackAction('simulation_start', { totalBatches: simState.batchIds.length, speed: simState.speed / 1000 });
     processNextBatch();
     simState.timer = setInterval(processNextBatch, simState.speed);
 }
@@ -141,7 +159,7 @@ function pauseSim() {
     clearInterval(simState.timer);
     document.getElementById('btn-play').disabled = false;
     document.getElementById('btn-pause').disabled = true;
-    document.getElementById('btn-play').textContent = '▶ Resume';
+    document.getElementById('btn-play').textContent = 'Resume';
     addLogEntry('system', 'Simulation paused', `Processed ${simState.currentIndex} / ${simState.batchIds.length}`);
 }
 
@@ -152,7 +170,7 @@ function resetSim() {
     simState.currentIndex = 0;
     simState.history = { labels: [], co2e: [], driftScores: [], alarms: [], hardness: [], dissolution: [] };
     document.getElementById('btn-play').disabled = false;
-    document.getElementById('btn-play').textContent = '▶ Start';
+    document.getElementById('btn-play').textContent = 'Start';
     document.getElementById('btn-pause').disabled = true;
     document.getElementById('sim-batch-counter').textContent = `0 / ${simState.batchIds.length}`;
     document.getElementById('sim-progress').style.width = '0%';
@@ -172,7 +190,20 @@ async function processNextBatch() {
     if (!simState || simState.currentIndex >= simState.batchIds.length) {
         pauseSim();
         addLogEntry('complete', 'Simulation complete', `All ${simState.batchIds.length} batches processed.`);
+        trackAction('simulation_complete', { totalBatches: simState.batchIds.length });
         document.getElementById('btn-play').disabled = true;
+        
+        try {
+            const user = getCurrentUser();
+            await api.post('batch/simulation-complete', {
+                total_batches: simState.batchIds.length,
+                alarms: simState.history.alarms,
+                recipient_email: user ? user.email : null
+            });
+            addLogEntry('system', 'Final Report Sent', 'Simulation Summary email dispatched successfully.');
+        } catch (e) {
+            console.error("Failed to send simulation summary email", e);
+        }
         return;
     }
 
@@ -196,6 +227,7 @@ async function processNextBatch() {
     document.getElementById('sim-progress').style.width = pct + '%';
 
     addLogEntry('data', `Batch ${batchId} received`, `Cluster: ${cluster} | CO₂e: ${co2e.toFixed(2)} kg`);
+    trackAction('simulation_batch', { batchId, cluster, co2e: parseFloat(co2e.toFixed(2)) });
 
     // Run drift check
     let alarm = 'OK';
@@ -232,6 +264,15 @@ async function processNextBatch() {
             addLogEntry('critical', `Drift: CRITICAL`, `Batch ${batchId} significant deviation detected!`);
         }
 
+        // Store drift result in metadata dynamically
+        const meta = {
+            batchId,
+            cluster,
+            alarm,
+            avgDrift,
+            drift_result: result
+        };
+
         // If drift detected, try to get recommendation
         if (alarm !== 'OK') {
             try {
@@ -241,9 +282,35 @@ async function processNextBatch() {
                         .map(([k, v]) => `${k}: ${v > 0 ? '+' : ''}${v.toFixed(2)}`)
                         .join(', ');
                     addLogEntry('rec', `Recommendation generated`, `Yield Guard: ${recText} | Expected CO₂e: ${(recs.pathway_a.expected_co2e || 0).toFixed(1)} kg`);
+                    meta.recommendation = recs;
+                    
+                    // Handle Auto-BoTorch vs Manual pause
+                    if (document.getElementById('sim-auto-botorch')?.checked) {
+                        const pwA = recs.pathway_a;
+                        const pwB = recs.pathway_b;
+                        let chosenPw = pwA; let chosenId = 'A';
+                        if (pwB && (pwB.preference_utility > pwA.preference_utility)) {
+                            chosenPw = pwB; chosenId = 'B';
+                        }
+                        
+                        addLogEntry('rec', 'Auto-BoTorch Activated', `Autonomous agent chose Pathway ${chosenId} to maximize Utility (${(chosenPw.preference_utility ?? 0).toFixed(3)}).`);
+                        
+                        // Fire decision async
+                        api.logDecision({
+                            batch_id: batchId,
+                            pathway_a: pwA, pathway_b: pwB,
+                            chosen: chosenId, modified_params: null, reason: 'Auto-BoTorch', target_config: cluster,
+                        }).catch(e => console.error(e));
+                    } else {
+                        addLogEntry('warning', `Simulation Paused`, `Operator decision required for Batch ${batchId}.`);
+                        pauseSim();
+                        renderInlineSimHITL(batchId, cluster, recs);
+                    }
                 }
             } catch { /* recommendation unavailable */ }
         }
+        
+        trackAction('simulation_drift_check', meta);
     } catch (e) {
         addLogEntry('warning', `Drift check skipped`, `${batchId}: ${e.message}`);
     }
@@ -260,6 +327,20 @@ async function processNextBatch() {
     updateTrendChart();
     updateDriftChart();
     updateHeatmap();
+    updateEnergyChart(batchId);
+
+    // Batchwise email update to DB
+    if (document.getElementById('sim-email-batch')?.checked) {
+        const user = getCurrentUser();
+        api.post('batch/simulation-batch-email', {
+            batch_id: batchId,
+            cluster_name: cluster,
+            alarm: alarm,
+            co2e: co2e,
+            drift_score: avgDrift,
+            recipient_email: user ? user.email : null
+        }).catch(e => console.error("Batchwise email failed", e));
+    }
 }
 
 function updateTrendChart() {
@@ -292,6 +373,25 @@ function updateHeatmap() {
     }], { height: 200, margin: { l: 100, r: 20, t: 10, b: 60 }, xaxis: { title: 'Batch' } });
 }
 
+async function updateEnergyChart(batchId) {
+    try {
+        const traj = await api.trajectory(batchId);
+        if (!traj || !traj.length) return;
+        const phaseEnergy = {};
+        traj.forEach(r => {
+            const p = r.Phase || 'Unknown';
+            phaseEnergy[p] = (phaseEnergy[p] || 0) + (r.Energy_kWh || 0);
+        });
+        const phases = Object.keys(phaseEnergy).sort((a,b) => phaseEnergy[a] - phaseEnergy[b]);
+        const energies = phases.map(p => phaseEnergy[p]);
+        plotChart('sim-energy-chart', [{
+            y: phases, x: energies, type: 'bar', orientation: 'h',
+            marker: { color: energies, colorscale: 'Viridis' },
+            text: energies.map(v => `${v.toFixed(2)} kWh`), textposition: 'outside'
+        }], { height: 240, margin: { l: 100, r: 40, t: 10, b: 40 }, xaxis: {title: 'Energy (kWh)'} });
+    } catch {}
+}
+
 function addLogEntry(type, title, detail) {
     const log = document.getElementById('sim-log');
     if (!log) return;
@@ -306,13 +406,13 @@ function addLogEntry(type, title, detail) {
         complete: 'var(--accent-blue)',
     };
     const icons = {
-        system: '⚙',
-        data: '📦',
-        ok: '✅',
-        warning: '⚠️',
-        critical: '🚨',
-        rec: '💡',
-        complete: '🏁',
+        system: '[SYS]',
+        data: '[DATA]',
+        ok: '[OK]',
+        warning: '[WARN]',
+        critical: '[CRIT]',
+        rec: '[REC]',
+        complete: '[DONE]',
     };
 
     const now = new Date().toLocaleTimeString();
@@ -331,3 +431,88 @@ function addLogEntry(type, title, detail) {
     // Keep max 100 entries
     while (log.children.length > 100) log.removeChild(log.lastChild);
 }
+
+function renderInlineSimHITL(batchId, cluster, recs) {
+    const container = document.getElementById('sim-hitl-container');
+    container.style.display = 'block';
+
+    const pathwayA = recs.pathway_a;
+    const pathwayB = recs.pathway_b;
+
+    container.innerHTML = `
+        <h3 class="section-title" style="margin-top:0;">Simulation Paused: Operator Decision Required</h3>
+        <p style="margin-bottom:1rem;">Drift detected in Batch <strong>${batchId}</strong>. Please execute a causal pathway to correct the trajectory and resume the simulation.</p>
+        <div class="grid-2" style="margin-bottom:1.5rem; gap:1.5rem;">
+          <div class="pathway-card pathway-a" id="sim-card-a" style="padding:1rem;"></div>
+          <div class="pathway-card pathway-b" id="sim-card-b" style="padding:1rem;"></div>
+        </div>
+        <div class="grid-2" style="margin-bottom:0; gap:1rem;">
+          <button class="btn btn-success btn-full" id="sim-btn-exec-a">Execute ${pathwayA.pathway_name}</button>
+          ${pathwayB ? `<button class="btn btn-primary btn-full" id="sim-btn-exec-b">Execute ${pathwayB.pathway_name}</button>` : ''}
+        </div>
+    `;
+
+    renderPathwayCardInline('sim-card-a', pathwayA);
+    if(pathwayB) renderPathwayCardInline('sim-card-b', pathwayB);
+
+    document.getElementById('sim-btn-exec-a').addEventListener('click', () => executeSimDecision(batchId, cluster, pathwayA, pathwayB, 'A'));
+    if (pathwayB && document.getElementById('sim-btn-exec-b')) {
+        document.getElementById('sim-btn-exec-b').addEventListener('click', () => executeSimDecision(batchId, cluster, pathwayA, pathwayB, 'B'));
+    }
+}
+
+function renderPathwayCardInline(containerId, pw) {
+    const el = document.getElementById(containerId);
+    if (!el || !pw) return;
+    const changes = pw.param_changes || [];
+    const safety = pw.safety_check || 'UNKNOWN';
+    const confidence = pw.causal_confidence || 0.8;
+    const utility = pw.preference_utility ?? 0;
+
+    const changeRows = changes.map(c =>
+        `<tr><td>${c.param}</td><td>${c.old_value}</td><td>${c.new_value}</td><td>${c.delta_pct > 0 ? '+' : ''}${c.delta_pct.toFixed(1)}%</td></tr>`
+    ).join('');
+
+    el.innerHTML = `
+        <h4 style="margin-bottom: 0.5rem">${pw.pathway_name}</h4>
+        <div class="subtitle" style="margin-bottom: 0.8rem">GP Utility Score: ${utility.toFixed(3)}</div>
+        ${changes.length ? `<table class="data-table" style="font-size: 0.85em; margin-bottom:1rem">
+          <thead><tr><th>Param</th><th>Old</th><th>New</th><th>%</th></tr></thead>
+          <tbody>${changeRows}</tbody>
+        </table>` : '<p class="text-muted" style="margin-bottom:1rem">No parameter changes required</p>'}
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+          <div class="metric-card" style="padding:0.5rem;flex:1;"><div class="metric-value" style="font-size:1rem">${pw.expected_co2_change > 0 ? '+' : ''}${pw.expected_co2_change.toFixed(3)} kg</div><p class="metric-label" style="font-size:0.7em">CO₂e Delta</p></div>
+          <div class="metric-card" style="padding:0.5rem;flex:1;"><div class="metric-value" style="font-size:1rem">${(confidence * 100).toFixed(0)}%</div><p class="metric-label" style="font-size:0.7em">Confidence</p></div>
+          <div class="metric-card" style="padding:0.5rem;flex:1;"><div class="metric-value" style="font-size:1rem;color:${safety === 'PASS' ? 'var(--accent-green)' : 'var(--accent-red)'}">${safety}</div><p class="metric-label" style="font-size:0.7em">Safety</p></div>
+        </div>
+    `;
+}
+
+async function executeSimDecision(batchId, cluster, pwA, pwB, chosen) {
+    const btnA = document.getElementById('sim-btn-exec-a');
+    const btnB = document.getElementById('sim-btn-exec-b');
+    if (btnA) btnA.disabled = true;
+    if (btnB) btnB.disabled = true;
+
+    try {
+        await api.logDecision({
+            batch_id: batchId,
+            pathway_a: pwA, pathway_b: pwB,
+            chosen, modified_params: null, reason: '', target_config: cluster,
+        });
+        
+        document.getElementById('sim-hitl-container').style.display = 'none';
+        addLogEntry('ok', `Decision Logged ✔`, `Operator executed Pathway ${chosen}. Tracking impact for next phases.`);
+        
+        // Wait a tiny bit then auto resume!
+        setTimeout(() => {
+            addLogEntry('system', 'Simulation resuming', 'Proceeding to next batch automatically...');
+            startSim();
+        }, 1000);
+    } catch (e) {
+        addLogEntry('critical', `Failed to execute decision`, e.message);
+        if (btnA) btnA.disabled = false;
+        if (btnB) btnB.disabled = false;
+    }
+}
+

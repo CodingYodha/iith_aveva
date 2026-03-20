@@ -1,0 +1,112 @@
+# =============================================
+# CB-MOPA .gitignore
+# =============================================
+
+# ----------------------------
+# Python
+# ----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+venv/
+.venv/
+env/
+.env.local
+
+# ----------------------------
+# Environment / Secrets
+# ----------------------------
+.env
+.env.*
+!.env.example
+!web/.env.example
+
+# ----------------------------
+# Jupyter Notebooks
+# ----------------------------
+.ipynb_checkpoints/
+*.ipynb
+
+# ----------------------------
+# ML Models & Large Files
+# ----------------------------
+models/*.pkl
+models/*.pt
+models/*.joblib
+models/botorch_gp_state.pt
+
+# ----------------------------
+# Data (processed / generated)
+# ----------------------------
+data/processed/
+data/golden/*.png
+
+# ----------------------------
+# Email Outbox (local simulation)
+# ----------------------------
+outbox/
+
+# ----------------------------
+# Node.js / Frontend
+# ----------------------------
+web/node_modules/
+node_modules/
+web/dist/
+web/.env.local
+
+# ----------------------------
+# Vite / Build Artifacts
+# ----------------------------
+*.local
+.vite/
+
+# ----------------------------
+# Logs
+# ----------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ----------------------------
+# OS
+# ----------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ----------------------------
+# IDE / Editor
+# ----------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ----------------------------
+# SQLite DB
+# ----------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# ----------------------------
+# Testing
+# ----------------------------
+.coverage
+htmlcov/
+coverage.xml

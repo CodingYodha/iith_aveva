@@ -1,16 +1,19 @@
 /**
  * Top navigation bar component.
+ * Shows auth status: user email + logout when logged in, Login link when not.
  */
 import { api } from '../api.js';
+import { getCurrentUser, onAuthChange, logout } from '../lib/auth.js';
 
 const NAV_ITEMS = [
     { path: '/', label: 'Home' },
     { path: '/dashboard', label: 'Dashboard' },
-    { path: '/live-batch', label: 'Live Batch' },
+    { path: '/live-batch', label: 'I/P Batch' },
     { path: '/recommendations', label: 'Recommendations' },
     { path: '/signatures', label: 'Golden Signatures' },
     { path: '/carbon', label: 'Carbon Targets' },
     { path: '/simulation', label: '⚡ Simulation' },
+    { path: '/history', label: 'History' },
 ];
 
 export function renderNavbar() {
@@ -19,17 +22,41 @@ export function renderNavbar() {
         i => `<a href="#${i.path}">${i.label}</a>`
     ).join('');
 
-    nav.innerHTML = `
-    <div class="nav-brand">CB-MOPA</div>
-    <div class="nav-links">${links}</div>
-    <div class="nav-status" id="nav-health">
-      <span class="status-dot" id="health-dot"></span>
-      <span id="health-text">Checking...</span>
-    </div>
-  `;
+    function render() {
+        const user = getCurrentUser();
+        const authHtml = user
+            ? `<div class="nav-user">
+                 <span class="nav-user-email">${user.email}</span>
+                 <button class="btn btn-outline btn-sm" id="nav-logout-btn">Logout</button>
+               </div>`
+            : `<a href="#/login" class="btn btn-primary btn-sm">Login</a>`;
 
-    checkHealth();
+        nav.innerHTML = `
+        <div class="nav-brand">CB-MOPA</div>
+        <div class="nav-links">${links}</div>
+        <div class="nav-right">
+          <div class="nav-status" id="nav-health">
+            <span class="status-dot" id="health-dot"></span>
+            <span id="health-text">Checking...</span>
+          </div>
+          ${authHtml}
+        </div>
+      `;
+
+        // Attach logout handler
+        const logoutBtn = document.getElementById('nav-logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => logout());
+        }
+
+        checkHealth();
+    }
+
+    render();
     setInterval(checkHealth, 15000);
+
+    // Re-render navbar when auth state changes
+    onAuthChange(() => render());
 }
 
 async function checkHealth() {

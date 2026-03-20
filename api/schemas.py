@@ -60,3 +60,17 @@ class BatchCompleteInput(BaseModel):
     batch_id: str
     actual_cqas: dict[str, float]
     cluster_name: str = "Balanced Operational Golden"
+    recipient_email: Optional[str] = None
+
+class SimulationCompleteInput(BaseModel):
+    total_batches: int
+    alarms: list[str]
+    recipient_email: Optional[str] = None
+
+class SimulationBatchEmailInput(BaseModel):
+    batch_id: str
+    cluster_name: str
+    alarm: str = "OK"
+    co2e: float = 0.0
+    drift_score: float = 0.0
+    recipient_email: Optional[str] = None

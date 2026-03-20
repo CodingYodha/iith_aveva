@@ -4,6 +4,7 @@
 import { api } from '../api.js';
 import { renderSidebar, state } from '../components/sidebar.js';
 import { plotChart, COLORS } from '../components/charts.js';
+import { trackAction } from '../lib/tracker.js';
 
 const MOCK_A = {
     pathway_name: 'Yield Guard', param_changes: [{ param: 'Drying_Temp', old_value: 60, new_value: 54, delta_pct: -10 }],
@@ -18,6 +19,7 @@ const MOCK_B = {
 
 export async function renderRecommendations(main) {
     renderSidebar({ showEmissionFactor: false, onChange: () => renderRecommendations(main) });
+    trackAction('page_view', { page: 'recommendations', batchId: state.batchId, cluster: state.cluster });
 
     // Load batch data for CQA summary
     let batchData = {};
@@ -161,6 +163,15 @@ async function logDecision(pwA, pwB, chosen, modified = null, reason = '') {
         if (res) {
             const total = res.total_comparisons || 0;
             resultEl.innerHTML = `<div class="alert alert-ok">Decision logged. ${res.preference_model_updated ? 'Preference model updated.' : 'Recorded.'} (${total}/3 comparisons)</div>`;
+            trackAction('operator_decision', { 
+                batchId: state.batchId, 
+                cluster: state.cluster, 
+                chosen, 
+                pathwayName: chosen === 'A' ? pwA.pathway_name : pwB?.pathway_name, 
+                modified: modified || null, 
+                reason,
+                pathways: { a: pwA, b: pwB }
+            });
         }
     } catch (e) {
         resultEl.innerHTML = `<div class="alert alert-crit">Failed: ${e.message}</div>`;

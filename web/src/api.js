@@ -54,4 +54,11 @@ export const api = {
 
     // Preferences
     preferenceSummary: () => request('GET', 'preferences/summary'),
+
+    // Agents (Track B)
+    agentsRun: (batchId, cluster) => request('POST', `agents/run/${batchId}?cluster_name=${encodeURIComponent(cluster || 'Balanced Operational Golden')}`),
+    agentsPending: () => request('GET', 'agents/pending'),
+    agentsRespond: (id, data) => request('POST', `agents/respond/${id}`, data),
+    agentsHistory: (limit = 50) => request('GET', `agents/history?limit=${limit}`),
+    agentsBatch: (batchId) => request('GET', `agents/batch/${batchId}`),
 };

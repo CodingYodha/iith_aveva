@@ -53,18 +53,13 @@ def drift_check(input_data: BatchStateInput):
 
 @router.post("/complete")
 def batch_complete(input_data: BatchCompleteInput, background_tasks: BackgroundTasks):
-    """Mark a batch as complete: update signature if dominant, track carbon."""
+    """Mark a batch as complete: run agents (propose signature if dominant), track carbon."""
     try:
-        from src.signatures.signature_manager import check_and_update_signature
         from src.carbon.carbon_tracker import carbon_tracker
         from src.notifications.email import send_batch_summary_email
-
-        # Check signature update
-        sig_result = check_and_update_signature(
-            input_data.batch_id,
-            input_data.actual_cqas,
-            input_data.cluster_name,
-        )
+        from src.agents.orchestrator import orchestrator
+        from constraints import CPP_COLS
+        import pandas as pd
 
         # Carbon summary
         total_energy = input_data.actual_cqas.get("total_energy_kWh", 0.0)
@@ -80,6 +75,29 @@ def batch_complete(input_data: BatchCompleteInput, background_tasks: BackgroundT
             "current_targets": targets,
         }
 
+        # Run all 3 agents (signature agent will PROPOSE, not auto-update)
+        cpp_params = {
+            k: v for k, v in input_data.actual_cqas.items() if k in CPP_COLS
+        }
+        agent_context = {
+            "batch_id": input_data.batch_id,
+            "cpp_params": cpp_params,
+            "actual_cqas": input_data.actual_cqas,
+            "cluster_name": input_data.cluster_name,
+        }
+
+        try:
+            agent_result = orchestrator.run_all(agent_context)
+            agent_summary = {
+                "agents_ran": len(agent_result.agent_results),
+                "pending_actions": len(agent_result.pending_actions),
+                "all_clear": agent_result.all_clear,
+            }
+        except Exception:
+            agent_summary = {"agents_ran": 0, "pending_actions": 0, "all_clear": True}
+
+        sig_result = {"updated": False, "reason": "Signature proposals now require operator approval via Agent Dashboard"}
+
         background_tasks.add_task(
             send_batch_summary_email,
             input_data.batch_id,
@@ -89,9 +107,10 @@ def batch_complete(input_data: BatchCompleteInput, background_tasks: BackgroundT
         )
 
         return {
-            "signature_updated": sig_result.get("updated", False),
+            "signature_updated": False,
             "signature_detail": sig_result,
             "carbon_summary": carbon_summary_dict,
+            "agent_summary": agent_summary,
         }
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))

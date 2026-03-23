@@ -1,5 +1,6 @@
 /**
  * CB-MOPA Web Frontend — Main Entry Point.
+ * Track B: Agentic Golden Signature Lifecycle & Carbon Reporting
  */
 
 import './style.css';
@@ -17,6 +18,7 @@ import { renderLogin } from './pages/login.js';
 import { renderSignup } from './pages/signup.js';
 import { renderHistory } from './pages/history.js';
 import { renderDagEditor } from './pages/dag-editor.js';
+import { renderAgentDashboard } from './pages/agent-dashboard.js';
 
 // Register routes
 route('/', renderLanding);
@@ -30,6 +32,7 @@ route('/login', renderLogin);
 route('/signup', renderSignup);
 route('/history', renderHistory);
 route('/dag-editor', renderDagEditor);
+route('/agents', renderAgentDashboard);
 
 // Boot — initialize auth first, then render UI
 async function boot() {

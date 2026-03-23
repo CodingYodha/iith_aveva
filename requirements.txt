@@ -38,3 +38,6 @@ openpyxl
 pytest
 packaging>=24.2
 h11
+# Track B — Agentic
+shap
+openai

@@ -10,6 +10,7 @@ const NAV_ITEMS = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/live-batch', label: 'I/P Batch' },
     { path: '/recommendations', label: 'Recommendations' },
+    { path: '/agents', label: 'Agent Control' },
     { path: '/signatures', label: 'Golden Signatures' },
     { path: '/carbon', label: 'Carbon Targets' },
     { path: '/simulation', label: 'Simulation' },

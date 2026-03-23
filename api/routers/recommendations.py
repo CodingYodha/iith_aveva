@@ -67,7 +67,7 @@ def get_recommendations(batch_id: str, cluster_name: str):
                 "expected_cqa_delta": rec.get("causal_effects", {}),
                 "expected_co2_change": rec.get("expected_co2_change", 0.0),
                 "safety_check": rec.get("safety_check", "UNKNOWN"),
-                "causal_confidence": 0.8,
+                "causal_confidence": rec.get("causal_confidence", 0.8),
                 "preference_utility": rec.get("preference_utility", 0.5),
             }
 

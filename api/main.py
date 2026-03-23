@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from api.routers import batch, recommendations, decisions, signatures, carbon, preferences, data, dag
+from api.routers import batch, recommendations, decisions, signatures, carbon, preferences, data, dag, agents
 
 app.include_router(batch.router, prefix="/api/batch", tags=["batch"])
 app.include_router(recommendations.router, prefix="/api/recommendations", tags=["recommendations"])
@@ -36,6 +36,7 @@ app.include_router(carbon.router, prefix="/api/carbon", tags=["carbon"])
 app.include_router(preferences.router, prefix="/api/preferences", tags=["preferences"])
 app.include_router(data.router, prefix="/api/data", tags=["data"])
 app.include_router(dag.router, prefix="/api/dag", tags=["dag"])
+app.include_router(agents.router, prefix="/api/agents", tags=["agents"])
 
 
 @app.get("/health")
@@ -53,5 +54,16 @@ def health_check():
 _web_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web", "dist")
 if os.path.isdir(_web_dist):
     from fastapi.staticfiles import StaticFiles
+    from starlette.middleware import Middleware
+    from starlette.responses import Response
+
+    @app.middleware("http")
+    async def no_cache_html(request, call_next):
+        response = await call_next(request)
+        if request.url.path == "/" or request.url.path.endswith(".html"):
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+        return response
+
     app.mount("/", StaticFiles(directory=_web_dist, html=True), name="web")
 
